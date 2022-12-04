@@ -6,7 +6,7 @@ import useCurrentPage from "@/composables/useCurrentPage";
 jest.mock("@/composables/useCurrentPage");
 const useCurrentPageMock = useCurrentPage as jest.Mock;
 
-import { useFilteredJobs, useFetchJobsDispatch } from "@/store/composables";
+import { useFilteredJobs, useFetchJobsDispatch,useFetchDegreesDispatch } from "@/store/composables";
 jest.mock("@/store/composables");
 const useFilteredJobsMock = useFilteredJobs as jest.Mock;
 
@@ -34,6 +34,18 @@ describe("JobListings", () => {
       shallowMount(JobListings, createConfig());
       expect(useFetchJobsDispatch).toHaveBeenCalled();
     });
+
+    it("makes call to fetch degrees from API", () => {
+      useFilteredJobsMock.mockReturnValue({ value: [] });
+      useCurrentPageMock.mockReturnValue({ value: 2 });
+      usePreviousAndNextPagesMock.mockReturnValue({
+        previousPage: 1,
+        nextPage: 3,
+      });
+      shallowMount(JobListings, createConfig());
+      expect(useFetchDegreesDispatch).toHaveBeenCalled();
+    });
+    
   });
 
   it("creates a job listing for a maximum of 10 jobs", async () => {
